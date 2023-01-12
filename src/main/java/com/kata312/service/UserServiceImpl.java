@@ -1,5 +1,6 @@
 package com.kata312.service;
 
+import com.kata312.DAO.RoleDAO;
 import com.kata312.DAO.UserDAO;
 
 import com.kata312.model.Role;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,10 +21,13 @@ import java.util.List;
 public class UserServiceImpl  implements UserService {
 
     private final UserDAO userDAO;
+    private final RoleDAO roleDAO;
+
     private final BCryptPasswordEncoder bcryptPasswordEncoder;
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, BCryptPasswordEncoder bcryptPasswordEncoder) {
+    public UserServiceImpl(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder bcryptPasswordEncoder) {
         this.userDAO = userDAO;
+        this.roleDAO = roleDAO;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
 
     }
@@ -32,7 +37,7 @@ public class UserServiceImpl  implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(User user) {
+    public void updateUser(User user,String[] rolesSelected) {
 
 
         User userFromBase = userDAO.getUserById(user.getId());
@@ -40,6 +45,12 @@ public class UserServiceImpl  implements UserService {
             user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
         }
 
+
+        List <Role> userRole =  new ArrayList<>();
+        for (String role: rolesSelected ) {
+            userRole.add(roleDAO.getRoleByName(role));
+        }
+        user.setRoles(userRole);
 
 
         userDAO.updateUser(user);
@@ -63,10 +74,16 @@ public class UserServiceImpl  implements UserService {
     }
     @Transactional
     @Override
-    public void addUser(User user) {
+    public void addUser(User user,String[] rolesSelected) {
+
 
         user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
 
+        List <Role> userRole =  new ArrayList<>();
+        for (String role: rolesSelected ) {
+            userRole.add(roleDAO.getRoleByName(role));
+        }
+        user.setRoles(userRole);
 
         userDAO.addUser(user);
 

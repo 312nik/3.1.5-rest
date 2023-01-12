@@ -45,11 +45,9 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             admin.setEmail("admin@mail.ru");
             admin.setAge(40);
             admin.setPassword("admin"); //admin
-            List<Role> adminRoleImpl= new ArrayList<>();
-            adminRoleImpl.add(userRole);
-            adminRoleImpl.add(adminRole);
-            admin.setRoles(adminRoleImpl);
-            userService.addUser(admin);
+            String[] roleForAdmin= {"ROLE_ADMIN","ROLE_USER"};
+
+            userService.addUser(admin,roleForAdmin);
 
             User user = new User();
             user.setName("User");
@@ -57,10 +55,8 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
             user.setAge(30);
             user.setEmail("user@mail.ru");
             user.setPassword("user"); //user
-            List<Role> userRoleImpl= new ArrayList<>();
-            userRoleImpl.add(userRole);
-            user.setRoles(userRoleImpl);
-            userService.addUser(user);
+            String[] roleForUser= {"ROLE_USER"};
+            userService.addUser(user,roleForUser);
         }
     }
 

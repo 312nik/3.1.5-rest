@@ -77,15 +77,11 @@ public class AdminController {
         } catch(Exception ignore){}
 
 
-        List <Role> userRole =  new ArrayList<>();
-        for (String role: selectRole ) {
-            userRole.add(roleService.getRoleByName(role));
-        }
-        user.setRoles(userRole);
 
 
 
-            userService.addUser(user);
+
+            userService.addUser(user,selectRole);
             return "redirect:/admin";
 
 
@@ -105,21 +101,19 @@ public class AdminController {
     public String update( User user,@RequestParam(value = "selectRoles") String[] selectRole, RedirectAttributes redirectAttributes) {
 
 
-
+        try {
         if (userService.getUserByEmail(user.getUsername()) != null &&
                 !userService.getUserByEmail(user.getUsername()).getId().equals(user.getId())) {
             redirectAttributes.addFlashAttribute("message",
                     "A user with such an email already exists!");
+
+            return "redirect:/admin";
         }
-
-        List <Role> userRole =  new ArrayList<>();
-        for (String role: selectRole ) {
-            userRole.add(roleService.getRoleByName(role));
-        }
-        user.setRoles(userRole);
+        } catch(Exception ignore){}
 
 
-        userService.updateUser(user);
+
+        userService.updateUser(user, selectRole);
         return "redirect:/admin";
 
     }
