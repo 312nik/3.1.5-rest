@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.security.Principal;
 
 @Controller
-
 public class UserController {
+
     private final UserServiceImpl userService;
 
     @Autowired
@@ -22,18 +22,13 @@ public class UserController {
 
     }
 
-
-
-
-
-
     @GetMapping("/user")
     public String showPrincipal(Model model, Principal principal) {
-       String userMail = principal.getName();
-       User user= userService.getUserByEmail(userMail);
-       model.addAttribute("userPrincipal",user);
+        String userMail = principal.getName();
+        User user= userService.getUserByEmail(userMail);
+        model.addAttribute("userPrincipal",user);
 
-       return "/user";
+        return "/user";
     }
 
 }
