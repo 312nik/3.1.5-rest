@@ -83,7 +83,7 @@ public class AdminController {
         }
         user.setRoles(userRole);
 
-        System.out.println(userRole);
+
 
             userService.addUser(user);
             return "redirect:/admin";
@@ -118,7 +118,6 @@ public class AdminController {
         }
         user.setRoles(userRole);
 
-        System.out.println(userRole);
 
         userService.updateUser(user);
         return "redirect:/admin";
