@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/user")
     public String showPrincipal(Model model, Principal principal) {
        String userMail = principal.getName();
-       User user= userService.findUserByEmail(userMail);
+       User user= userService.getUserByEmail(userMail);
        model.addAttribute("userPrincipal",user);
 
        return "/user";

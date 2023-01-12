@@ -99,7 +99,7 @@
 										                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 									                    </div>
 									                    <div class="modal-body mx-auto ">
-										                    <form th:method="POST" th:action="@{/admin/edit}" autocomplete="off" th:id="${'editForm' + user.id}">
+										                    <form th:method="PATCH" th:action="@{/admin/edit}" autocomplete="off" th:id="${'editForm' + user.id}">
 						
 						                    <div class="form-group  mx-auto text-centre w-100 ">
 							
@@ -164,7 +164,7 @@
 					                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				                      </div>
 				                      <div class="modal-body">
-					                      <form  th:method="POST" th:action="@{/admin/delete/{id}(id=${user.id})}"  th:id="${'deleteForm' + user.id}">
+					                      <form  th:method="DELETE" th:action="@{/admin/delete/{id}(id=${user.id})}"  th:id="${'deleteForm' + user.id}">
 						
 						
 						                      <div class="form-group  mx-auto text-centre ">
@@ -247,9 +247,9 @@
 
 
                       <label  for="roles" class="com-form-label fw-bold">Role</label>
-                      <select name="roles" size="2" multiple required class="form-select mx-auto"   id="roles">
-                        <option value="1">ADMIN</option>
-                        <option value="2" selected >USER</option>
+                      <select name="selectRoles" size="2" multiple required class="form-select mx-auto"   id="roles">
+                        <option value="ROLE_ADMIN">ADMIN</option>
+                        <option value="ROLE_USER" selected >USER</option>
                       </select>
                     </div>
                     <button  type="submit" class="btn  mx-auto btn-success my-3">Add new user</button>

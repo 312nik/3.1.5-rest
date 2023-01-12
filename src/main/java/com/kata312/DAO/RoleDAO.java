@@ -1,12 +1,12 @@
-package com.kata312.service;
+package com.kata312.DAO;
 
 import com.kata312.model.Role;
 
 import java.util.List;
 
-public interface RoleService {
+public interface RoleDAO {
+
     void save (Role role);
     List<Role> getAllRole();
-
-    Role getRoleByName(String role);
+    Role getRoleByName(String name);
 }

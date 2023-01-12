@@ -1,40 +1,44 @@
 package com.kata312.controller;
 
-import com.kata312.exception.RecordNotFoundException;
+
+
 import com.kata312.model.Role;
 import com.kata312.model.User;
+
 import com.kata312.service.RoleServiceImpl;
 import com.kata312.service.UserServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
-import java.security.InvalidParameterException;
+
+
 import java.security.Principal;
-import java.util.HashSet;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Controller
 
 public class AdminController {
 
     private final UserServiceImpl userService;
+    private final RoleServiceImpl roleService;
 
 
     @Autowired
-    public AdminController(UserServiceImpl userService) {
+    public AdminController(UserServiceImpl userService, RoleServiceImpl roleService) {
 
         this.userService = userService;
 
 
+        this.roleService = roleService;
     }
 
 
@@ -42,8 +46,8 @@ public class AdminController {
     @GetMapping("/admin")
     public String showAllUsers(Model model, Principal principal) {
         String userMail = principal.getName();
-        User user= userService.findUserByEmail(userMail);
-        List<User> users = userService.findAll();
+        User user= userService.getUserByEmail(userMail);
+        List<User> users = userService.getAllUsers();
         User newUser=new User();
         model.addAttribute("userPrincipal",user);
         model.addAttribute("users", users);
@@ -56,39 +60,54 @@ public class AdminController {
 
 
 
-@Transactional
+
     @PostMapping("admin/new")
-    public String createUser(@ModelAttribute("newUser")  User user, RedirectAttributes redirectAttributes) {
-        User userNew= userService.findUserByEmail(user.getEmail());
+    public String createUser(@ModelAttribute("newUser")  User user,@RequestParam(value = "selectRoles") String[] selectRole,RedirectAttributes redirectAttributes) {
 
-        if (userNew !=null){
-            redirectAttributes.addFlashAttribute("message",
-                    "A user with such an email already exists!");
 
-            return "redirect:/admin";
+        try {
+
+            User userNew= userService.getUserByEmail(user.getEmail());
+            if (userNew != null) {
+                redirectAttributes.addFlashAttribute("message",
+                        "A user with such an email already exists!");
+
+                return "redirect:/admin";
+            }
+        } catch(Exception ignore){}
+
+
+        List <Role> userRole =  new ArrayList<>();
+        for (String role: selectRole ) {
+            userRole.add(roleService.getRoleByName(role));
         }
-        userService.saveUser(user);
+        user.setRoles(userRole);
+
+        System.out.println(userRole);
+
+            userService.addUser(user);
+            return "redirect:/admin";
+
+
+    }
+
+    @DeleteMapping("/admin/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id)  {
+
+        userService.removeUserById(id);
         return "redirect:/admin";
 
     }
 
-    @PostMapping("/admin/delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id) throws RecordNotFoundException {
-
-        userService.deleteUser(id);
-        return "redirect:/admin";
-
-    }
 
 
-
-    @PostMapping("/admin/edit")
+    @PatchMapping("/admin/edit")
     public String update( User user, RedirectAttributes redirectAttributes) {
 
 
 
-        if (userService.findUserByEmail(user.getUsername()) != null &&
-                !userService.findUserByEmail(user.getUsername()).getId().equals(user.getId())) {
+        if (userService.getUserByEmail(user.getUsername()) != null &&
+                !userService.getUserByEmail(user.getUsername()).getId().equals(user.getId())) {
             redirectAttributes.addFlashAttribute("message",
                     "A user with such an email already exists!");
         }

@@ -1,89 +1,91 @@
 package com.kata312.service;
 
-import com.kata312.exception.RecordNotFoundException;
+import com.kata312.DAO.UserDAO;
+
+import com.kata312.model.Role;
 import com.kata312.model.User;
-import com.kata312.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 
 public class UserServiceImpl  implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserDAO userDAO;
     private final BCryptPasswordEncoder bcryptPasswordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bcryptPasswordEncoder) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserDAO userDAO, BCryptPasswordEncoder bcryptPasswordEncoder) {
+        this.userDAO = userDAO;
         this.bcryptPasswordEncoder = bcryptPasswordEncoder;
-    }
-
-    public User findById(Long id) {
-
-        return userRepository.findById(id).orElse(null);
 
     }
 
 
 
-
-    public List<User> findAll() {
-        List<User> result = (List<User>) userRepository.findAll();
-        if (result.size() > 0) {
-            return result;
-        } else {
-            return new ArrayList<User>();
-        }
-    }
-
-
-
-
-@Transactional
-    public  void deleteUser(Long id)
-            throws RecordNotFoundException {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.deleteById(id);
-        } else {
-            throw new RecordNotFoundException
-                    ("No user record exist for given id");
-        }
-    }
-
-    @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
-    }
 
     @Transactional
-    public void saveUser(User user) {
-          user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-
-
-    }
-
     @Override
-    @Transactional
     public void updateUser(User user) {
 
 
-        if (user.getPassword().isEmpty()) {
-            user.setPassword(userRepository.findById(user.getId()).get().getPassword());
-        } else {
+        User userFromBase = userDAO.getUserById(user.getId());
+        if (!userFromBase.getPassword().equals(user.getPassword())) {
             user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
         }
-        userRepository.save(user);
 
 
-  }
+
+        userDAO.updateUser(user);
+
+    }
+    @Transactional
+    @Override
+    public void removeUserById(Long id) {
+        userDAO.removeUserById(id);
+
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userDAO.getUserById(id);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return userDAO.getAllUsers();
+    }
+    @Transactional
+    @Override
+    public void addUser(User user) {
+
+        user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
+
+
+        userDAO.addUser(user);
+
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
+    }
+
+    public String getRolesToString(User user) {
+        List <Role> roles = user.getRoles();
+        StringBuilder getRoles= new StringBuilder(" ");
+        for (Role role:roles) {
+            getRoles.append(role.toString().substring(5)).append(" ");
+        }
+        assert getRoles != null;
+        return  getRoles.toString().trim();
+    }
 }
 
 
