@@ -102,7 +102,7 @@ public class AdminController {
 
 
     @PatchMapping("/admin/edit")
-    public String update( User user, RedirectAttributes redirectAttributes) {
+    public String update( User user,@RequestParam(value = "selectRoles") String[] selectRole, RedirectAttributes redirectAttributes) {
 
 
 
@@ -111,6 +111,14 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("message",
                     "A user with such an email already exists!");
         }
+
+        List <Role> userRole =  new ArrayList<>();
+        for (String role: selectRole ) {
+            userRole.add(roleService.getRoleByName(role));
+        }
+        user.setRoles(userRole);
+
+        System.out.println(userRole);
 
         userService.updateUser(user);
         return "redirect:/admin";
