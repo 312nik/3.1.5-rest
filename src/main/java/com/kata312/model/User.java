@@ -42,6 +42,16 @@ public class User  implements UserDetails {
         this.password = password;
 
     }
+    public String getRoleToString(){
+        List <Role> roles=getRoles();
+        String getRoles=" ";
+        for (Role role:roles) {
+            getRoles= getRoles+(role.toString().substring(5)+" ");
+        }
+        assert getRoles != null;
+        return  getRoles.trim();
+
+    }
 
     public List <Role> getRoles() {
         return roles;
@@ -102,10 +112,13 @@ public class User  implements UserDetails {
     }
 
 
+
     @Override
     public String getUsername() {
         return getEmail();
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -133,15 +146,6 @@ public class User  implements UserDetails {
     }
 
 
-    public String getRoleToString(){
-        List <Role> roles=getRoles();
-        String getRoles=" ";
-        for (Role role:roles) {
-            getRoles= getRoles+(role.toString().substring(5)+" ");
-        }
-        assert getRoles != null;
-        return  getRoles.trim();
 
-    }
 
 }

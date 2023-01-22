@@ -1,36 +1,29 @@
-const url='/api/user'
+// данные авторизированного  пользователя
 
-async function getUserPage () {
-    let page = await fetch(url)
 
-    if (page.ok) {
-        let user = await page.json();
-        getInformationAboutUser(user);
-    } else {
-        alert(`Error, ${page.status}`);
-    }
+getPrincipal();
+
+function getPrincipal() {
+   fetch("/api/user")
+       .then(res => res.json())
+       .then(data => {
+          $('#user').append(data.email);
+
+          $('#user-roles').append(data.roleToString);
+          let user = `$(
+                <tr>
+                    <td>${data.id}</td>
+                    <td>${data.name}</td>
+                    <td>${data.lastName}</td>
+                    <td>${data.age}</td>   
+                    <td>${data.email}</td>
+                    <td>${data.roleToString}</td>
+                </tr>)`;
+          $('#tbody').append(user);
+       })
 }
 
-function getInformationAboutUser(user) {
-    let tr = document.createElement("tr")
-    let roles = []
-
-    for (let role of user.roles) {
 
 
-        roles.push((" " + role.name.replaceAll('ROLE_', '')).trim());
-    }
 
-    tr.innerHTML=
-        `<tr>
-            <td>${user.id}</td>
-            <td>${user.name}</td>
-            <td>${user.lastName}</td>
-            <td>${user.age}</td>
-            <td>${user.email}</td>
-            <td>${roles}</td>
-        </tr>`
-    document.getElementById(`tbody`).append(tr);
-}
 
-getUserPage();

@@ -12,14 +12,15 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
-public class UserControllerRest {
+public class UserRESTController {
 
     private final UserService userService;
 
-    public UserControllerRest(UserService userService) {
+    public UserRESTController(UserService userService) {
         this.userService = userService;
     }
 
+// НедоREST ;)
 
     @GetMapping("/user")
     public ResponseEntity<User> showUser(Principal principal) {

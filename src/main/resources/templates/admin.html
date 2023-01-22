@@ -9,11 +9,10 @@
 <body  class="bg-light ">
 <nav class="navbar   fs-4 bg-dark justify-content-between align-bottom px-4">
   <div class="nav  text-white  me-1 d-inline-block  text-left">
-    <span class="fw-bold   " th:text="${userPrincipal.email}"></span>
+    <span class="fw-bold "   id="user"></span>
     <span class="lead">with roles:</span>
-    <th:block th:each="role : ${userPrincipal.roles}">
-      <span class="lead" th:utext="${#strings.substring(role.name,5)}"></span>
-    </th:block>
+	 <span class="lead" id="user-roles"></span>
+  
   </div>
   <a class="nav-link text-secondary fs-6 align-bottom " th:href="@{'/logout'}" >Logout</a>
 </nav>
@@ -284,7 +283,7 @@
                     <th scope="col">Role</th>
                   </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="tbody>
                   <tr>
                     <td th:text="${userPrincipal.id}"></td>
                     <td th:text="${userPrincipal.name}"></td>
@@ -296,7 +295,7 @@
                         <span th:utext="${#strings.substring(role.name,5)}"></span>
                       </th:block>
                     </td>
-                    <td >
+                    
                   </tr>
                   </tbody>
                 </table>
@@ -315,6 +314,9 @@
         integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
         crossorigin="anonymous">
 </script>
+<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="/user.js"></script>
+
 </body>
 
 

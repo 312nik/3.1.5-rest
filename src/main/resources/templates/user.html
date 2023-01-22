@@ -9,14 +9,14 @@
 <body  class="bg-light ">
 <nav class="navbar   fs-4 bg-dark justify-content-between align-bottom px-4">
     <div class="nav  text-white  me-1 d-inline-block  text-left">
-
-        <span class="fw-bold   " th:text="${userPrincipal.email}"></span>
+        
+        <span class="fw-bold" id="user"></span>
         <span class="lead">with roles:</span>
-           <th:block th:each="role : ${userPrincipal.roles}">
-               <span class="lead" th:utext="${#strings.substring(role.name,5)}"></span>
-           </th:block>
+  
+        <span class="lead" id="user-roles"></span>
+    
     </div>
-
+    
     <a class="nav-link text-secondary fs-6 align-bottom " th:href="@{'/logout'}" >Logout</a>
 
 </nav>
@@ -25,16 +25,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 ">
-
+            
             <div class="nav-vertical  flex-column nav-pills  my-3 bg-white " style="height:1250px;">
-            <div class="flex-column nav-pills   " id="v-pills-tab" role="tablist" aria-orientation="vertical" >
-                <a class="nav-link  fs-6 py-2 px-3 active">User</a>
+                <div class="flex-column nav-pills   " id="v-pills-tab" role="tablist" aria-orientation="vertical" >
+                    <a class="nav-link  fs-6 py-2 px-3 active">User</a>
+                </div>
             </div>
         </div>
-        </div>
         <div class="col-md-10">
-
-
+            
+            
             <div class="container-fluid bg-light  g-0">
                 <p class="fs-1">User information-page</p>
                 <div class="card" >
@@ -45,14 +45,14 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-
+                                
                                 <th scope="col">ID</th>
                                 <th scope="col">First name</th>
                                 <th scope="col">Last name</th>
                                 <th scope="col">Age</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Role</th>
-
+                            
                             </tr>
                             </thead>
                             <tbody id="tbody">
@@ -65,8 +65,15 @@
         </div>
     </div>
 </div>
-<script th:src="@{/user.js}"></script>
+
+
+
+<script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="/user.js"></script>
+
 </body>
+
+
 
 
 
